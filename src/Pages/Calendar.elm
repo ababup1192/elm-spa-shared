@@ -15,7 +15,7 @@ import View exposing (View)
 
 page : Shared.Model -> Request.With Params -> Page.With Model Msg
 page shared _ =
-    Page.advanced
+    Page.element
         { init = init
         , update = update
         , view = view shared
@@ -31,12 +31,12 @@ type alias Model =
     { timeMaybe : Maybe Time.Posix }
 
 
-init : ( Model, Effect Msg )
+init : ( Model, Cmd Msg )
 init =
     ( { timeMaybe =
             Nothing
       }
-    , Effect.fromCmd <| Task.perform GotTime Time.now
+    , Task.perform GotTime Time.now
     )
 
 
@@ -48,11 +48,11 @@ type Msg
     = GotTime Time.Posix
 
 
-update : Msg -> Model -> ( Model, Effect Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GotTime posix ->
-            ( { model | timeMaybe = Just posix }, Effect.none )
+            ( { model | timeMaybe = Just posix }, Cmd.none )
 
 
 
